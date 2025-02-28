@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
+const axios = require('axios');
 require('dotenv').config();
 const rateLimit = require('express-rate-limit');
 const PORT = process.env.PORT || 7000;
+const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET
 
 
 const courseRoute = require('./Routes/course-routes');
