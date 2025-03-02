@@ -46,5 +46,5 @@ Userschema.pre('save', async function (){
     this.confirmPassword = undefined;
 });
 
-const user = mongoose.model('admin', Userschema)
+const user = mongoose.model('user', Userschema)
 module.exports = user;

@@ -22,6 +22,10 @@ const cousrseSchema = new mongoose.Schema(
             enum:['Video','Book'],
             required: [true, 'please enter the type of the course']
         },
+        uploadLink: {
+            type: String,
+            required: [true, 'please enter the course or book upload url']
+        },
         quantity: {
             type: Number,
             required: [true, 'please enter the number of copies available']

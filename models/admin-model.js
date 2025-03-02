@@ -3,7 +3,7 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
 
-const Userschema = new mongoose.Schema(
+const adminSchema = new mongoose.Schema(
     {
         name: {
             type: String,
@@ -41,10 +41,10 @@ const Userschema = new mongoose.Schema(
     }
 )
 
-Userschema.pre('save', async function (){
+adminSchema.pre('save', async function (){
     this.password = await bcrypt.hash(this.password, 10);
     this.confirmPassword = undefined;
 });
 
-const admin = mongoose.model('admin', Userschema)
+const admin = mongoose.models.Admin || mongoose.model("Admin", adminSchema);
 module.exports = admin;
