@@ -3,32 +3,39 @@ const Payment = require("../models/payment-model");
 const User = require("../models/user-model.js");
 
 
-const initPay =  async (req, res) => {
+const initPay = async (req, res) => {
     try {
-      const userId = req.user._id;
-      const name  = req.user.name;
-      const userEmail = req.user.email;
-      const amount = 5000; // Subscription fee (convert to kobo)
-  
-      const payment = await paystack.initializePayment(userEmail, amount);
-  
-      // Save transaction as 'pending'
-      const newPayment = new Payment({
-        userId,
-        name,
-        userEmail,
-        amount: 5000,
-        reference: payment.data.reference,
-        status: "pending"
-      });
-  
-      await newPayment.save();
-  
-      res.json({ authorization_url: payment.data.authorization_url });
+        const userId = req.user._id;
+        const name = req.user.name;
+        const userEmail = req.user.email;
+        const amount = 5000.00; // Subscription fee (convert to kobo)
+
+        const payment = await paystack.initializePayment(userEmail, amount);
+
+        if (!payment || !payment.data) {
+            return res.status(400).json({ error: "Payment initialization failed" }); // 🛑 Return here
+        }
+
+        // Save transaction as 'pending'
+        const newPayment = new Payment({
+            userId,
+            name,
+            userEmail,
+            amount: 5000,
+            reference: payment.data.reference,
+            status: "pending",
+        });
+
+        await newPayment.save();
+
+        return res.json({ authorization_url: payment.data.authorization_url }); // 🛑 Always return after sending response
     } catch (error) {
-      res.status(500).json({ error: error.message });
+        console.error("Payment Error:", error);
+        if (!res.headersSent) { // ✅ Prevents double response issue
+            return res.status(500).json({ error: "Payment initialization failed" });
+        }
     }
-  };
+};
 
 const verifyPayment = async (req, res) => {
   try {
