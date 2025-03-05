@@ -4,9 +4,9 @@ const {initPay, verifyPayment} = require('../controllers/payment-controller.js')
 const {protectPath} =  require('../authorization.js')
 
 
-// ✅ Initialize Payment
+// Initialize Payment
 router.post("/initialize-payment", protectPath,initPay)
-// ✅ Verify Payment
+// Verify Payment
 router.get("/verify-payment/:reference",verifyPayment)
 
 
